@@ -97,14 +97,20 @@ public class Trail {
                     // User is scrolling, calculate and store the tracking data of the views
                     // that were being viewed before the scroll.
                     if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+
                         endTime = System.currentTimeMillis();
 
                         for (int trackedViewsCount = 0;
                              trackedViewsCount < viewIdsViewed.size(); trackedViewsCount++ ) {
 
-                            trackingData.add(prepareTrackingData(String
-                                            .valueOf(viewIdsViewed.get(trackedViewsCount)),
-                                    (endTime - startTime)/1000));
+                            long duration = endTime = startTime;
+
+                            if (duration > minimumTimeThreshold) {
+
+                                trackingData.add(prepareTrackingData(String
+                                                .valueOf(viewIdsViewed.get(trackedViewsCount)),
+                                        duration));
+                            }
                         }
 
                         viewIdsViewed.clear();
@@ -223,8 +229,8 @@ public class Trail {
     }
 
     /**
-     * Method to analyse if the view is properly visible or not and if it falls under the right
-     * threshold, start tracking that particular view.
+     * Method to analyse if the view is as much visible as the defined height threshold
+     * or not and if it falls, start tracking that particular view.
      *
      * @param firstVisibleItemPosition
      * @param lastVisibleItemPosition
@@ -264,19 +270,9 @@ public class Trail {
         view.getLocalVisibleRect(itemRect);
 
         double visibleHeight = itemRect.height();
-        double height = view.getMeasuredHeight();
+        double totalHeightOfTheView = view.getMeasuredHeight();
 
-        // Find the height of the top item
-        Log.i("Visible Height", String.valueOf(visibleHeight));
-        Log.i("Measured Height", String.valueOf(view.getMeasuredHeight()));
-
-        double viewVisibleHeightPercentage = ((visibleHeight/height) * 100);
-
-        Log.i("Percentage visible", String.valueOf(viewVisibleHeightPercentage));
-
-        Log.i("___", "___");
-
-        return viewVisibleHeightPercentage;
+        return ((visibleHeight/totalHeightOfTheView) * 100);
     }
 
     /**
