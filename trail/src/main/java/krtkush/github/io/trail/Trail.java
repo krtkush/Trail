@@ -301,10 +301,10 @@ public class Trail {
      */
     public static class Builder {
 
-        private long dataDumpInterval;
         private RecyclerView recyclerView;
-        private double minimumVisibleHeightThreshold;
-        private long minimumTimeThreshold;
+        private long dataDumpInterval = 60000; // Default to 1 minute.
+        private double minimumVisibleHeightThreshold = 60; // Default to 60 percent.
+        private long minimumTimeThreshold = 3000; // Default to 3 seconds.
 
         /**
          * Interval after which the data should be handed over to the user.
