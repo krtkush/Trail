@@ -28,8 +28,8 @@ public class Trail {
     // Flag to pause tracking.
     private boolean trackingPaused = false;
 
-    // ArrayList of view ids that have been viewed.
-    private ArrayList<Integer> viewIdsViewed = new ArrayList<>();
+    // ArrayList of view positions that have been viewed for more than the threshold time.
+    private ArrayList<Integer> positionOfViewsViewed = new ArrayList<>();
 
     // ArrayList of TrackingData class instances.
     private ArrayList<TrackingData> trackingData = new ArrayList<>();
@@ -101,19 +101,23 @@ public class Trail {
                         endTime = System.currentTimeMillis();
 
                         for (int trackedViewsCount = 0;
-                             trackedViewsCount < viewIdsViewed.size(); trackedViewsCount++ ) {
+                             trackedViewsCount < positionOfViewsViewed.size();
+                             trackedViewsCount++ ) {
 
                             long duration = endTime = startTime;
 
                             if (duration > minimumTimeThreshold) {
 
+                                View itemView = recyclerView.getLayoutManager()
+                                        .findViewByPosition(positionOfViewsViewed.get(trackedViewsCount));
+
                                 trackingData.add(prepareTrackingData(String
-                                                .valueOf(viewIdsViewed.get(trackedViewsCount)),
-                                        duration));
+                                                .valueOf(positionOfViewsViewed.get(trackedViewsCount)),
+                                        duration, getVisibleHeightPercentage(itemView)));
                             }
                         }
 
-                        viewIdsViewed.clear();
+                        positionOfViewsViewed.clear();
                     }
 
                     // Scrolling has ended, start the tracking process by assigning a start time
@@ -154,14 +158,24 @@ public class Trail {
 
             analyzeAndAddViewData(firstVisibleItemPosition, lastVisibleItemPosition);
 
-            for (int trackedViewsCount = 0; trackedViewsCount < viewIdsViewed.size();
+            for (int trackedViewsCount = 0; trackedViewsCount < positionOfViewsViewed.size();
                  trackedViewsCount++ ) {
 
-                trackingData.add(prepareTrackingData(String.valueOf(viewIdsViewed
-                        .get(trackedViewsCount)), (endTime - startTime)/1000));
+                long duration = endTime = startTime;
+
+                if (duration > minimumTimeThreshold) {
+
+                    View itemView = recyclerView.getLayoutManager()
+                            .findViewByPosition(positionOfViewsViewed.get(trackedViewsCount));
+
+                    trackingData.add(prepareTrackingData(String.valueOf(
+                            positionOfViewsViewed.get(trackedViewsCount)),
+                            duration,
+                            getVisibleHeightPercentage(itemView)));
+                }
             }
 
-            viewIdsViewed.clear();
+            positionOfViewsViewed.clear();
         }
     }
 
@@ -252,7 +266,7 @@ public class Trail {
             // tracking data.
             if (getVisibleHeightPercentage(itemView) >= minimumVisibleHeightThreshold) {
 
-                viewIdsViewed.add(viewPosition);
+                positionOfViewsViewed.add(viewPosition);
             }
         }
     }
@@ -282,12 +296,15 @@ public class Trail {
      * @param viewDuration in seconds.
      * @return
      */
-    private TrackingData prepareTrackingData(String viewId, long viewDuration) {
+    private TrackingData prepareTrackingData(String viewId,
+                                             long viewDuration,
+                                             double percentageHeightVisible) {
 
         TrackingData trackingData = new TrackingData();
 
         trackingData.setViewId(viewId);
         trackingData.setViewDuration(viewDuration);
+        trackingData.setPercentageHeightVisible(percentageHeightVisible);
 
         return trackingData;
     }
@@ -297,6 +314,7 @@ public class Trail {
      */
     public static class Builder {
 
+        private long deviceId;
         private RecyclerView recyclerView;
         private long dataDumpInterval = 60000; // Default to 1 minute.
         private double minimumVisibleHeightThreshold = 60; // Default to 60 percent.
