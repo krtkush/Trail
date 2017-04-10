@@ -9,7 +9,7 @@ public class TrackingData {
     // Duration for which the view has been viewed.
     private long viewDuration;
 
-    // Unique ID for the view that was viewed.
+    // Unique Id for the view that was viewed.
     private String viewId;
 
     // Percentage of height visible

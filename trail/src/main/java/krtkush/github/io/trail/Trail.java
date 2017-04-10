@@ -41,7 +41,7 @@ public class Trail {
     private long dataDumpInterval;
 
     // The minimum time user must spend on a view item for its tracking data to be considered.
-    private long minimumTimeThreshold;
+    private long minimumViewingTimeThreshold;
 
     // The minimum amount of area of the list item that should be on
     // the screen for the tracking to start.
@@ -52,7 +52,7 @@ public class Trail {
         this.recyclerView = builder.recyclerView;
         this.dataDumpInterval = builder.dataDumpInterval;
         this.minimumVisibleHeightThreshold = builder.minimumVisibleHeightThreshold;
-        this.minimumTimeThreshold = builder.minimumTimeThreshold;
+        this.minimumViewingTimeThreshold = builder.minimumViewingTimeThreshold;
     }
 
     /**
@@ -106,7 +106,7 @@ public class Trail {
 
                             long duration = endTime - startTime;
 
-                            if (duration > minimumTimeThreshold) {
+                            if (duration > minimumViewingTimeThreshold) {
 
                                 View itemView = recyclerView.getLayoutManager()
                                         .findViewByPosition(positionOfViewsViewed.get(trackedViewsCount));
@@ -163,7 +163,7 @@ public class Trail {
 
                 long duration = endTime - startTime;
 
-                if (duration > minimumTimeThreshold) {
+                if (duration > minimumViewingTimeThreshold) {
 
                     View itemView = recyclerView.getLayoutManager()
                             .findViewByPosition(positionOfViewsViewed.get(trackedViewsCount));
@@ -314,11 +314,10 @@ public class Trail {
      */
     public static class Builder {
 
-        private long deviceId;
         private RecyclerView recyclerView;
         private long dataDumpInterval = 60000; // Default to 1 minute.
         private double minimumVisibleHeightThreshold = 60; // Default to 60 percent.
-        private long minimumTimeThreshold = 3000; // Default to 3 seconds.
+        private long minimumViewingTimeThreshold = 3000; // Default to 3 seconds.
 
         /**
          * Interval after which the data should be handed over to the user.
@@ -352,11 +351,11 @@ public class Trail {
 
         /**
          * The minimum time user must spend on a view item for its tracking data to be considered.
-         * @param minimumTimeThreshold
+         * @param minimumViewingTimeThreshold
          * @return
          */
-        public Builder setMinimumTimeThreshold(long minimumTimeThreshold) {
-            this.minimumTimeThreshold = minimumTimeThreshold;
+        public Builder setMinimumViewingTimeThreshold(long minimumViewingTimeThreshold) {
+            this.minimumViewingTimeThreshold = minimumViewingTimeThreshold;
             return this;
         }
 
