@@ -58,18 +58,4 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             text = (TextView) view.findViewById(R.id.text);
         }
     }
-
-    @Override
-    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
-        super.onViewAttachedToWindow(holder);
-
-        //Log.i("Item attached.", String.valueOf(holder.getAdapterPosition()));
-    }
-
-    @Override
-    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-
-        //Log.i("Item detached.", String.valueOf(holder.getAdapterPosition()));
-    }
 }
