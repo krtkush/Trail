@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by kartikeykushwaha on 07/04/17.
@@ -43,9 +45,17 @@ public class Trail {
     // The minimum time user must spend on a view item for its tracking data to be considered.
     private long minimumViewingTimeThreshold;
 
+    // Boolean flag to inform whether to dump data at an interval or not.
+    private boolean dumpDataAfterInterval;
+
     // The minimum amount of area of the list item that should be on
     // the screen for the tracking to start.
     private double minimumVisibleHeightThreshold;
+
+    // Reference to the `TrailTrackingListener` interface.
+    private TrailTrackingListener trailTrackingListener;
+
+    private Timer dataDumpTimer = new Timer();
 
     public Trail(Builder builder) {
 
@@ -53,6 +63,8 @@ public class Trail {
         this.dataDumpInterval = builder.dataDumpInterval;
         this.minimumVisibleHeightThreshold = builder.minimumVisibleHeightThreshold;
         this.minimumViewingTimeThreshold = builder.minimumViewingTimeThreshold;
+        this.trailTrackingListener = builder.trailTrackingListener;
+        this.dumpDataAfterInterval = builder.dumpDataAfterInterval;
     }
 
     /**
@@ -139,6 +151,9 @@ public class Trail {
                 }
             }
         });
+
+        if(dumpDataAfterInterval)
+            dumpingDataAfterSpecifiedInterval();
     }
 
     /**
@@ -175,6 +190,7 @@ public class Trail {
                 }
             }
 
+            dataDumpTimer.cancel();
             positionOfViewsViewed.clear();
         }
     }
@@ -240,6 +256,21 @@ public class Trail {
             ex.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * Method to dump data to the user and then purge the collected data from the library side.
+     */
+    private void dumpingDataAfterSpecifiedInterval() {
+
+        dataDumpTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                trailTrackingListener.trailDataDump(trackingData);
+                trackingData.clear();
+                dumpingDataAfterSpecifiedInterval();
+            }
+        }, dataDumpInterval);
     }
 
     /**
@@ -309,6 +340,14 @@ public class Trail {
         return trackingData;
     }
 
+    public interface TrailTrackingListener {
+
+        /**
+         * Method to dump data all the tracking data.
+         */
+        void trailDataDump(ArrayList<TrackingData> data);
+    }
+
     /**
      * Class for builder pattern.
      */
@@ -318,6 +357,8 @@ public class Trail {
         private long dataDumpInterval = 60000; // Default to 1 minute.
         private double minimumVisibleHeightThreshold = 60; // Default to 60 percent.
         private long minimumViewingTimeThreshold = 3000; // Default to 3 seconds.
+        private boolean dumpDataAfterInterval = false;
+        private TrailTrackingListener trailTrackingListener = null;
 
         /**
          * Interval after which the data should be handed over to the user.
@@ -356,6 +397,21 @@ public class Trail {
          */
         public Builder setMinimumViewingTimeThreshold(long minimumViewingTimeThreshold) {
             this.minimumViewingTimeThreshold = minimumViewingTimeThreshold;
+            return this;
+        }
+
+        /**
+         * Reference of the class implementing the TrailTrackingListener interface.
+         * @param trailTrackingListener
+         * @return
+         */
+        public Builder setTrailTrackingListener(TrailTrackingListener trailTrackingListener) {
+            this.trailTrackingListener = trailTrackingListener;
+            return this;
+        }
+
+        public Builder dumpDataAfterInterval(Boolean dumpDataAfterInterval) {
+            this.dumpDataAfterInterval = dumpDataAfterInterval;
             return this;
         }
 

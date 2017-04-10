@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import java.util.ArrayList;
 
+import krtkush.github.io.trail.TrackingData;
 import krtkush.github.io.trail.Trail;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Trail.TrailTrackingListener{
 
     private Trail trail;
 
@@ -35,7 +37,9 @@ public class MainActivity extends AppCompatActivity {
                 .setRecyclerView(recyclerView)
                 .setMinimumViewingTimeThreshold(2000)
                 .setMinimumVisibleHeightThreshold(60)
-                .setDataDumpInterval(30000)
+                .setTrailTrackingListener(this)
+                .setDataDumpInterval(1000)
+                .dumpDataAfterInterval(true)
                 .build();
     }
 
@@ -51,5 +55,15 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
 
         trail.getTrackingData(true);
+    }
+
+    @Override
+    public void trailDataDump(ArrayList<TrackingData> data) {
+
+        if(data != null) {
+            // Do something with the data.
+            for(int i = 0 ; i < data.size(); ++i)
+                Log.i("Data dump", data.get(i).getViewId());
+        }
     }
 }
