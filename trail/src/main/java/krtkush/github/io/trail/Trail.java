@@ -104,7 +104,7 @@ public class Trail {
                              trackedViewsCount < positionOfViewsViewed.size();
                              trackedViewsCount++ ) {
 
-                            long duration = endTime = startTime;
+                            long duration = endTime - startTime;
 
                             if (duration > minimumTimeThreshold) {
 
@@ -161,7 +161,7 @@ public class Trail {
             for (int trackedViewsCount = 0; trackedViewsCount < positionOfViewsViewed.size();
                  trackedViewsCount++ ) {
 
-                long duration = endTime = startTime;
+                long duration = endTime - startTime;
 
                 if (duration > minimumTimeThreshold) {
 
