@@ -32,11 +32,11 @@ Initializing Trail -
 
     Trail trail = new Trail.Builder()
                 .setRecyclerView(recyclerView)      // Pass the instance of the RecyclerView
-                .setMinimumViewingTimeThreshold(2000)   // Minimum time the view is on the screen for being tracked. 
-                .setMinimumVisibleHeightThreshold(60)   // Minimum height visible on the screen (in term sof percentage).
+                .setMinimumViewingTimeThreshold(2000)   // Minimum time the view is on the screen for being tracked (in milliseconds). 
+                .setMinimumVisibleHeightThreshold(60)   // Minimum height visible on the screen (in terms of percentage).
                 .setTrailTrackingListener(this)     // Listener for callbacks related to Trail.
                 .setDataDumpInterval(1000)      // Time after which data will be handed over to the user automatically. 
-                .dumpDataAfterInterval(true)    // Enable handing data over to user after the time period defined above.
+                .dumpDataAfterInterval(true)    // Enable handing data over to user after the time period specified above.
                 .build();
                 
 Available method - 
@@ -48,4 +48,4 @@ Available method -
 5. `getTrackingData(boolean stopTracking)` - Get the tracking data collected till this moment. `stopTracking` To stop the tracking or not. 
 6. `clearAllTrackingData()` - Clea all the tracking data collected.
                 
-            
+ 
