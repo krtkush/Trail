@@ -121,10 +121,12 @@ public class Trail {
                             if (duration > minimumViewingTimeThreshold) {
 
                                 View itemView = recyclerView.getLayoutManager()
-                                        .findViewByPosition(positionOfViewsViewed.get(trackedViewsCount));
+                                        .findViewByPosition(positionOfViewsViewed
+                                                .get(trackedViewsCount));
 
                                 trackingData.add(prepareTrackingData(String
-                                                .valueOf(positionOfViewsViewed.get(trackedViewsCount)),
+                                                .valueOf(positionOfViewsViewed
+                                                        .get(trackedViewsCount)),
                                         duration, getVisibleHeightPercentage(itemView)));
                             }
                         }
@@ -153,7 +155,7 @@ public class Trail {
         });
 
         if(dumpDataAfterInterval)
-            dumpingDataAfterSpecifiedInterval();
+            dumpDataAfterSpecifiedInterval();
     }
 
     /**
@@ -261,14 +263,14 @@ public class Trail {
     /**
      * Method to dump data to the user and then purge the collected data from the library side.
      */
-    private void dumpingDataAfterSpecifiedInterval() {
+    private void dumpDataAfterSpecifiedInterval() {
 
         dataDumpTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 trailTrackingListener.trailDataDump(trackingData);
                 trackingData.clear();
-                dumpingDataAfterSpecifiedInterval();
+                dumpDataAfterSpecifiedInterval();
             }
         }, dataDumpInterval);
     }

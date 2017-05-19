@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import krtkush.github.io.trail.TrackingData;
 import krtkush.github.io.trail.Trail;
 
-public class MainActivity extends AppCompatActivity implements Trail.TrailTrackingListener{
+public class MainActivity extends AppCompatActivity implements Trail.TrailTrackingListener {
 
     private Trail trail;
 
