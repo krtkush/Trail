@@ -1,5 +1,7 @@
 # Trail
 
+**This project has been archived and there are no plans to develop it further or suppor it.**
+
 Currently in beta, Trail aims to be a simple and highly customizable user behaviour tracking library for Android. 
 
 Unlike other, industry standard tools, Trail only provides raw data within the app with no web interface. It'll be upto the developer's own discretion as to how to use the data collected.## Setup
